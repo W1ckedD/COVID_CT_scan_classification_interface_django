@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+COVID Classifier
+{% endblock %}
+
+{% block content %}
+<h1>صفحه اصلی</h1>
+{% if user.is_authenticated %}
+{{ user.first_name }} خوش آمدید.
+{% endif %}
+{% endblock %}
