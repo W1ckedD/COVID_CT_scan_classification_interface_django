@@ -4,7 +4,7 @@
 {% block content %}
   <h1>ایجاد حساب کاربری</h1>
 
-  <form action="{% url 'register' %}" method="post" class="w-50 m-auto mt-5 p-5">
+  <form action="{% url 'register' %}" id="form" method="post" class="w-50 m-auto mt-5 p-5">
     {% csrf_token %}
     <div class="form-group mb-2">
       <label for="first_name">نام</label>
