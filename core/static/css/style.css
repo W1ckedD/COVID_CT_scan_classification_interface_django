@@ -3,10 +3,24 @@
   src: url('../fonts/Dirooz-FD-WOL.ttf');
 }
 
+:root {
+  --primary-color: rgba(66, 135, 245, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 html, body, h1, h2, h3, h4, h5, h6, p, input, textarea, button, a {
   font-family: 'Dirooz', sans-serif !important;
 }
 
-#form {
-  box-shadow: 0 0 10px #ccc !important;
+.container {
+  max-width: 1100px;
+  width: 100%;
+  margin: auto;
+  padding-top: 60px;
 }
+
