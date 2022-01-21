@@ -61,3 +61,7 @@ class RegisterView(View):
     messages.success(request, 'حساب جدید با موفقیت ایجاد شد.')
     return redirect('index')
 
+class LogoutView(View):
+  def post(self, request, *args, **kwargs):
+    auth.logout(request)
+    return redirect('login')

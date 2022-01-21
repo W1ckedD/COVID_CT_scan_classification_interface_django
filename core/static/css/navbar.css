@@ -55,4 +55,7 @@
 .nav-link {
   text-decoration: none;
   color: #333;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
