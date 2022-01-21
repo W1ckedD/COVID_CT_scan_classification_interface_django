@@ -12,8 +12,12 @@
   </button>
 
   <ul class="navbar-nav">
+    {% if request.path == '/' %}
     <li class="nav-item active">
-      <a class="nav-link" href="#">صفحه اصلی</a>
+    {% else  %}
+    <li class="nav-item">
+    {% endif %}
+      <a class="nav-link" href="{% url 'index' %}">صفحه اصلی</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="#">تصاویر</a>
@@ -25,7 +29,7 @@
       <a href="#" class="nav-link">داشبورد</a>
     </li>
     <div class="nav-item">
-      <form action="{% url 'logout' %}" method="post">
+      <form action="{% url 'accounts_logout' %}" method="post">
         {% csrf_token %}
         <button type="submit" class="nav-link">خروج</button>
       </form>
@@ -33,11 +37,19 @@
   </ul>
   {% else %}
   <ul class="navbar-nav">
+    {% if 'login' in request.path %}
+    <li class="nav-item active">
+    {% else %}
     <li class="nav-item">
-      <a href="#" class="nav-link">ورود</a>
+    {% endif %}
+      <a href="{% url 'accounts_login' %}" class="nav-link">ورود</a>
     </li>
+    {% if 'register' in request.path %}
+    <li class="nav-item active">
+    {% else %}
     <li class="nav-item">
-      <a href="#" class="nav-link">ایجاد حساب</a>
+    {% endif %}
+      <a href="{% url 'accounts_register' %}" class="nav-link">ثبت نام</a>
     </li>
   </ul>
   {% endif %}

@@ -5,7 +5,7 @@ from django.views import View
 
 class LoginView(View):
   def get(self, request, *args, **kwargs):
-    pass
+    return render(request, 'accounts/login.html', context={})
 
   def post(self, request, *args, **kwargs):
     pass

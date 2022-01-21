@@ -29,26 +29,29 @@
 .nav-link::before {
   content: '';
   width: 0;
-  height: 4px;
+  height: 2px;
   left: 50%;
   background-color: var(--primary-color);
   position: absolute;
-  bottom: -4px;
+  bottom: -2px;
   transition: width ease-in-out 300ms;
 }
 
 .nav-link::after {
   content: '';
   width: 0;
-  height: 4px;
+  height: 2px;
   right: 50%;
   background-color: var(--primary-color);
   position: absolute;
-  bottom: -4px;
+  bottom: -2px;
   transition: width ease-in-out 200ms;
 }
 
-.nav-link:hover::before, .nav-link:hover::after {
+.nav-link:hover::before,
+.nav-link:hover::after,
+.nav-item.active .nav-link::before,
+.nav-item.nav-item.active .nav-link::after {
   width: 50%;
 }
 
