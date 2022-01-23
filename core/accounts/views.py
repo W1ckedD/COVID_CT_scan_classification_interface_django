@@ -15,16 +15,16 @@ class LoginView(View):
 
     if not email_or_username or not password: 
       messages.error(request, 'لطفا تمامی فیلد ها را پر کنید.')
-      return redirect('login')
+      return redirect('accounts_login')
 
     if email:
       user = User.objects.get(email=email)
       if user is None:
         messages.error(request, 'نام کاربری / ایمیل یا رمز عبور اشتباه است.')
-        return redirect('login')
+        return redirect('accounts_login')
       if not user.check_password(password):
         messages.error(request, 'نام کاربری / ایمیل یا رمز عبور اشتباه است.')
-        return redirect('login')
+        return redirect('accounts_login')
       
       auth.login(request, user)
       messages.success(request, 'خوش آمدید.')
@@ -63,23 +63,23 @@ class RegisterView(View):
       or not password_2
     ):
       messages.error(request, 'لطفا تمامی فیلد ها را پر کنید.')
-      return redirect('register')
+      return redirect('accounts_register')
     
     if User.objects.filter(username=username).exists():
       messages.error(request, 'این نام کاربری از قبل در سیستم ثبت شده است.')
-      return redirect('register')
+      return redirect('accounts_register')
 
     if User.objects.filter(email=email).exists(): 
       messages.error(request, 'این ایمیل برای کاربری دیگر در سیستم ثبت شده است.')
-      return redirect('register')
+      return redirect('accounts_register')
 
     if password != password_2:
       messages.error(request, 'رمز عبور با تکرار آن همخوانی ندارد.')
-      return redirect('register')
+      return redirect('accounts_register')
 
     if '@' in username:
       messages.error(request, 'نام کاربری نمی تواند شامل کاراکتر "@" باشد.')
-      return redirect('register')
+      return redirect('accounts_register')
 
 
     user = User.objects.create_user(

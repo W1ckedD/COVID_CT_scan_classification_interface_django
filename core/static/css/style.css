@@ -5,6 +5,8 @@
 
 :root {
   --primary-color: rgba(66, 135, 245, 1);
+  --success-color: rgba(104, 212, 132, 1);
+  --danger-color: rgba(252, 96, 96, 1);
 }
 
 * {

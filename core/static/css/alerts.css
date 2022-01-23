@@ -1,0 +1,38 @@
+#message {
+  position: fixed;
+  top: 80px;
+  left: 10px;
+  transition: opacity ease-in-out 200ms;
+}
+
+.alert {
+  max-width: 600px;
+  padding: 1rem;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 4px #ccc;
+  z-index: 100;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.close {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  margin-left: 1rem;
+}
+
+.close:focus {
+  outline: none;
+}
+
+.alert-error {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.alert-error .close {
+  color: white;
+}
