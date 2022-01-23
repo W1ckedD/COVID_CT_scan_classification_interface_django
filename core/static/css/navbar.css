@@ -12,6 +12,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
+  z-index: 2;
 }
 
 .navbar-nav {

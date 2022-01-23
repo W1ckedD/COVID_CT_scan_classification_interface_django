@@ -1,0 +1,37 @@
+.sidebar {
+  position: fixed;
+  top: 60px;
+  width: 280px;
+  height: calc(100vh - 60px);
+  box-shadow: 0 0 4px #ccc;
+  z-index: 1;
+  background-color: white;
+  overflow: hidden auto;
+}
+
+.sidebar-menu {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  list-style: none;
+}
+
+.menu-item {
+  padding: 0.5rem 1rem;
+  border: none;
+  text-align: center;
+  margin: 1rem 0;
+  transition: background-color ease-in-out 200ms;
+}
+
+.menu-item:hover {
+  background-color: #ddd;
+}
+
+.menu-item.active {
+  border-left: solid 3px var(--primary-color);
+}
+
+.menu-link {
+  text-decoration: none;
+  color: #333;
+}

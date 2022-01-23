@@ -29,7 +29,7 @@ class LoginView(View):
       
       auth.login(request, user)
       messages.success(request, 'خوش آمدید.')
-      return redirect('index')
+      return redirect('accounts_dashboard')
       
     elif username:
       user = auth.authenticate(username=username, password=password)
@@ -38,7 +38,7 @@ class LoginView(View):
         return redirect('login')
       auth.login(request, user)
       messages.success(request, 'خوش آمدید.')
-      return redirect('index')
+      return redirect('accounts_dashboard')
 
 
 class RegisterView(View):
@@ -92,9 +92,18 @@ class RegisterView(View):
     auth.login(request, user)
     user.save()
     messages.success(request, 'حساب جدید با موفقیت ایجاد شد.')
-    return redirect('index')
+    return redirect('accounts_dashboard')
 
 class LogoutView(View):
   def post(self, request, *args, **kwargs):
     auth.logout(request)
     return redirect('accounts_login')
+
+
+class DashboardView(View):
+  def get(self, request, *args, **kwargs):
+    if request.user.is_authenticated:
+      return render(request, 'accounts/dashboard.html', context={})
+    else:
+      messages.error(request, 'برای مشاهده این قسمت، ابتدا به حساب کاربری خود وارد شوید.')
+      return redirect('accounts_login')

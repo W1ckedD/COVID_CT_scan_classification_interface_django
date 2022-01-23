@@ -36,3 +36,12 @@
 .alert-error .close {
   color: white;
 }
+
+.alert-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.alert-success .close {
+  color: white;
+}
