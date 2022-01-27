@@ -17,6 +17,7 @@ class Sample(models.Model):
   probability = models.FloatField(blank=True)
   visible_to_public = models.BooleanField(default=True)
   visible_to_users = models.BooleanField(default=True)
+  issued_at = models.DateTimeField(auto_now_add=True)
 
   def __str__(self):
     return f'{self.account}, {self.name}'
