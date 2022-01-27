@@ -1,8 +1,9 @@
-{% extends 'base.html' %}
-{% block title %}تصاویر{% endblock %}
+{% extends 'base.html' %} {% block title %}تصاویر{% endblock %} 
 {% block content %}
 {% if samples|length == 0 %}
-تصویری یافت نشد.
-{% endif %}
-
-{% endblock %}
+<h4>تصویری یافت نشد.</h4>
+{% else  %}
+{% for sample in samples %}
+<p>{{ sample.name }}</p>
+{% endfor %}
+{% endif %} {% endblock %}

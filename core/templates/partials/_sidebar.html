@@ -1,15 +1,31 @@
 <nav class="sidebar">
   <ul class="sidebar-menu">
+    {% if 'dashboard' in request.path %}
     <li class="menu-item active">
-      <a href="#" class="menu-link">داشبورد</a>
-    </li>
+    {% else %}
     <li class="menu-item">
+    {% endif %}
+      <a href="{% url 'accounts_dashboard' %}" class="menu-link">داشبورد</a>
+    </li>
+    {% if 'my-samples' in request.path %}
+    <li class="menu-item active">
+    {% else %}
+    <li class="menu-item">
+    {% endif %}
       <a href="#" class="menu-link">تصاویر من</a>
     </li>
+    {% if 'add-sample' in request.path %}
+    <li class="menu-item active">
+    {% else %}
     <li class="menu-item">
+    {% endif %}
       <a href="#" class="menu-link">بارگذاری تصویر</a>
     </li>
+    {% if 'settings' in request.path %}
+    <li class="menu-item active">
+    {% else %}
     <li class="menu-item">
+    {% endif %}
       <a href="#" class="menu-link">تنظیمات</a>
     </li>
   </ul>

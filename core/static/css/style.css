@@ -91,3 +91,14 @@ html, body, h1, h2, h3, h4, h5, h6, p, input, textarea, button, a {
 .btn-block {
   width: 100%;
 }
+
+.checkbox-container {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.checkbox-container input {
+  margin-left: 1rem;
+}
