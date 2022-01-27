@@ -7,11 +7,20 @@ from .models import Sample
 class SamplesView(View):
   def get(self, request, *args, **kwargs):
     if request.user.is_authenticated:
-      samples = Sample.objects.filter(visible_to_users=True)
+      samples = Sample.objects.filter(visible_to_users=True).order_by('-issued_at')
       return render(request, 'samples/samples.html', context={'samples': samples})
     else:
-      samples = Sample.objects.filter(visible_to_public=True)
+      samples = Sample.objects.filter(visible_to_public=True).order_by('-issued_at')
       return render(request, 'samples/samples.html', context={'samples': samples})
+
+class MySamplesView(View):
+  def get(self, request, *args, **kwargs):
+    if request.user.is_authenticated:
+      samples = Sample.objects.filter(user=request.user).order_by('-issued_at')
+      return render(request, 'samples/samples.html', context={'samples': samples})
+    else:
+      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
+      return redirect('accounts_login')
 
 
 class AddSampleView(View):
@@ -22,3 +31,18 @@ class AddSampleView(View):
 
     return render(request, 'samples/add-sample.html', context={})
 
+  def post(self, request, *args, **kwargs):
+    name = request.POST.get('name')
+    image = request.FILES.get('image')
+    visible_to_users = request.POST.get('visible_to_users')
+    visible_to_public = request.POST.get('visible_to_public')
+    print(
+      f'''
+        name: {name}
+        image: {image}
+        visible_to_users: {visible_to_users}
+        visible_to_public: {visible_to_public}
+      '''
+    )
+    print(request.POST)
+    return redirect('samples_add-sample')
