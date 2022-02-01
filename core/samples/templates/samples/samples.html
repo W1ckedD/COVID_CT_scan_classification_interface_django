@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block title %}تصاویر{% endblock %} {% block content %} 
+{% extends 'base.html' %} {% block title %}تصاویر{% endblock %} {% block content %}
 
 <h1>تصاویر من</h1>
 
@@ -18,28 +18,21 @@
           </div>
           <div class="col-lg-4">
             {% if sample.result == 'POS' %}
-            <p class="sample-pos">
-              مبتلا به کوید 19
-            </p>
+            <p class="sample-pos">مبتلا به کوید 19</p>
             {% elif sample.result == 'NEG' %}
-            <p class="sample-neg">
-              نا مبتلا به کوید 19
-            </p>
+            <p class="sample-neg">نا مبتلا به کوید 19</p>
             {% else %}
-            <p class="sample-tbd">
-              نا مشخص
-            </p>
+            <p class="sample-tbd">نا مشخص</p>
             {% endif %}
           </div>
           <div class="col-lg-4">
-            {% if sample.probabilty %}
-            {{ sample.probabilty }}
-            {% endif %}
+            {% if sample.probabilty %} {{ sample.probabilty }} <strong>درصد احتمال: </strong>{% endif %}
           </div>
         </div>
         <div class="sample-actions">
           <a href="" class="btn btn-secondary">بیشتر</a>
-          <span>{{ sample.issued_at }}</span>
+            <span>{{ sample.issued_at|time:"h:i A" }}</span>
+            <span>{{ sample.issued_at|date:"Y/m/d" }}</span>
         </div>
       </div>
     </div>
