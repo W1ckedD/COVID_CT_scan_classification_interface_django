@@ -12,7 +12,7 @@
     {% else %}
     <li class="menu-item">
     {% endif %}
-      <a href="#" class="menu-link">تصاویر من</a>
+      <a href="{% url 'samples_my-samples' %}" class="menu-link">تصاویر من</a>
     </li>
     {% if 'add-sample' in request.path %}
     <li class="menu-item active">

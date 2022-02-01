@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.views import View
 from django.contrib import messages
+from django.core.files.storage import FileSystemStorage
 
 from .models import Sample
 
@@ -16,7 +17,7 @@ class SamplesView(View):
 class MySamplesView(View):
   def get(self, request, *args, **kwargs):
     if request.user.is_authenticated:
-      samples = Sample.objects.filter(user=request.user).order_by('-issued_at')
+      samples = Sample.objects.filter(account=request.user).order_by('-issued_at')
       return render(request, 'samples/samples.html', context={'samples': samples})
     else:
       messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
@@ -36,13 +37,19 @@ class AddSampleView(View):
     image = request.FILES.get('image')
     visible_to_users = request.POST.get('visible_to_users')
     visible_to_public = request.POST.get('visible_to_public')
-    print(
-      f'''
-        name: {name}
-        image: {image}
-        visible_to_users: {visible_to_users}
-        visible_to_public: {visible_to_public}
-      '''
-    )
-    print(request.POST)
-    return redirect('samples_add-sample')
+    fs = FileSystemStorage()
+    file = fs.save(image.name, image)
+    img_url = fs.url(file)
+
+    sample = Sample(account=request.user, name=name, image=img_url)
+    if visible_to_users is None:
+      sample.visible_to_users = False
+      sample.visible_to_public = False
+    elif visible_to_public is None:
+      sample.visible_to_users = True
+      sample.visible_to_public = False
+    else:
+      sample.visible_to_public = True
+      sample.visible_to_public = True
+    sample.save()
+    return redirect('samples_my-samples')

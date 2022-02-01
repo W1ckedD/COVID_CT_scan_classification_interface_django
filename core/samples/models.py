@@ -14,7 +14,7 @@ class Sample(models.Model):
     ],
     default='TBD'
   )
-  probability = models.FloatField(blank=True)
+  probability = models.FloatField(blank=True, null=True)
   visible_to_public = models.BooleanField(default=True)
   visible_to_users = models.BooleanField(default=True)
   issued_at = models.DateTimeField(auto_now_add=True)
