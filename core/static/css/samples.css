@@ -1,0 +1,31 @@
+.sample {
+  padding-bottom: 1rem;
+  margin: 1rem;
+  /* border-radius: 5px; */
+  box-shadow: 0 4px 4px #ccc;
+  transition: transform 300ms ease-in-out;
+}
+
+.sample:hover {
+  transform: translateY(-4px);
+}
+
+.sample-img {
+  width: 100%;
+  height: auto;
+}
+
+.sample-info {
+  padding: 0.5rem;
+}
+
+.sample-title {
+  text-align: center;
+}
+
+.sample-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}

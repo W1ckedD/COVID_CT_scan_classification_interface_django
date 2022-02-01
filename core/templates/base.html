@@ -9,10 +9,12 @@
       rel="stylesheet"
       href="https://bootswatch.com/5/litera/bootstrap.min.css"
     />-->
+    <link rel="stylesheet" href="{% static 'css/bootstrap-grid.rtl.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
     <link rel="stylesheet" href="{% static 'css/alerts.css' %}" />
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/samples.css' %}" />
     <!--<script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -31,6 +33,7 @@
       crossorigin="anonymous"
       defer
     ></script> -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %" defer></script>
     {% block css %} {% endblock %} {% block javascript %} {% endblock %}
     <title>{% block title %} {% endblock %}</title>
   </head>
