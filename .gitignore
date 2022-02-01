@@ -2,3 +2,7 @@
 *.pyo
 *.sqlite3
 *.h5
+*.jpg
+*.png
+*.jpeg
+*.webp
