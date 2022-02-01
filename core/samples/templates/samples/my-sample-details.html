@@ -1,0 +1,75 @@
+{% extends 'base.html' %} {% block title %}{{sample.account}} | {{ sample.name}}
+{% endblock %} {% block content %}
+
+<h1>{{ sample.name }}</h1>
+<div class="row">
+  <div class="col-lg-6 order-1 order-lg-2">
+    <img src="{{ sample.image }}" alt="" class="sample-img" />
+  </div>
+  <div class="col-lg-6 order-2 order-lg-1">
+    <div class="row sample-section-odd">
+      <h3>مشخصات</h3>
+      <div class="col-lg-6 col-sm-12">
+        <p>
+          <strong class="sample-tag">نام نمونه: </strong>
+          {{ sample.name }}
+        </p>
+      </div>
+      <div class="col-lg-6 col-sm-12">
+        <p>
+          <strong class="sample-tag">نام کاربر مالک: </strong>
+          {{ sample.account.first_name }} {{ sample.account.last_name }}
+        </p>
+      </div>
+      <div class="col-lg-6 col-sm-12">
+        <p>
+          <strong class="sample-tag">تاریخ بارگذاری: </strong>
+          <span>{{ sample.issued_at|date:"Y/m/d" }}</span>
+          ,
+          <span>{{ sample.issued_at|time:"h:i A" }}</span>
+        </p>
+      </div>
+    </div>
+    <div class="row sample-section-even">
+      <div class="col-lg-6 col-sm-12">
+        <strong class="sample-tag">وضعیت: </strong>
+        {% if sample.result == 'POS' %}
+        <p class="sample-pos">مبتلا به کوید 19</p>
+        {% elif sample.result == 'NEG' %}
+        <p class="sample-neg">نا مبتلا به کوید 19</p>
+        {% else %}
+        <p class="sample-tbd">نا مشخص</p>
+        {% endif %}
+      </div>
+      <div class="col-lg-6 col-sm-12">
+        <p>
+          <strong class="sample-tag">درصد احتمال: </strong>
+          {% if sample.probability %} {{ sample.probability|floatformat:8 }} {% else %} محاسبه
+          نشده {% endif %}
+        </p>
+      </div>
+      <div class="col-lg-6 col-sm-12">
+        <p>
+          <strong class="sample-tag">تاریخ آخرین محاسبه: </strong>
+          {% if sample.predicted_at %} {{ sample.predicted_at }} {% else %} محاسبه
+          نشده {% endif %}
+        </p>
+      </div>
+      <div class="col-lg-6 col-sm-12">
+        <form action="{% url 'samples_predict-sample' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="sample_id" value="{{ sample.id }}">
+          <button type="submit" class="btn btn-primary btn-block">
+            {% if sample.probability %}
+            محاسبه مجدد
+            {% else %}
+            محاسبه
+            {% endif %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

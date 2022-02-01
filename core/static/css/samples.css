@@ -4,6 +4,10 @@
   /* border-radius: 5px; */
   box-shadow: 0 4px 4px #ccc;
   transition: transform 300ms ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 2rem);
 }
 
 .sample:hover {
@@ -28,4 +32,41 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 1rem;
+}
+
+.sample-section-odd {
+  padding: 1rem;
+  background-color: #eee;
+  margin: 1rem;
+  border: none;
+}
+
+.sample-section-even {
+  padding: 1rem;
+  background-color: white;
+  margin: 1rem;
+  border: solid 1px #ccc;
+}
+
+.sample-pos {
+  text-align: center;
+  padding: 0.5rem 1rem;
+  color: white;
+  background-color: var(--danger-color);
+  border-radius: 5px;
+}
+
+.sample-neg {
+  text-align: center;
+  padding: 0.5rem 1rem;
+  color: #333;
+  background-color: var(--success-color);
+  border-radius: 5px;
+}
+
+.sample-tbd {
+  padding: 0.5rem 0;
+  color: var(--primary-color);
+  background-color: white;
+  border-radius: 5px;
 }

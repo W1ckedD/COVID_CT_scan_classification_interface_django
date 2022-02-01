@@ -1,9 +1,15 @@
-from django.shortcuts import redirect, render
+import os
+from django.utils import timezone
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 
 from .models import Sample
+
+from tensorflow.keras.models import load_model
+from utils.preprocess import preprocess_img
+
 
 class SamplesView(View):
   def get(self, request, *args, **kwargs):
@@ -53,3 +59,30 @@ class AddSampleView(View):
       sample.visible_to_public = True
     sample.save()
     return redirect('samples_my-samples')
+
+class SampleDetailsView(View):
+  def get(self, request, *args, **kwargs):
+    sample = get_object_or_404(Sample, id=kwargs.get('id'))
+    return render(request, 'samples/my-sample-details.html', context={'sample': sample})
+
+class PredictSample(View):
+  def post(self, request, *args, **kwargs):
+    MODEL_DIR = os.path.join(os.getcwd(), 'models', '002.h5')
+    cnn_model = load_model(MODEL_DIR)
+    sample_id = request.POST.get('sample_id')
+    sample = get_object_or_404(Sample, id=sample_id)
+    IMG_DIR = os.path.join(os.getcwd(), 'media', str(sample.image).split('/')[2])
+    img = preprocess_img(IMG_DIR)
+    predicted = cnn_model.predict(img)[0]
+    print(predicted)
+    if predicted[0] > predicted[1]:
+      probability = predicted[0]
+      result = 'NEG'
+    else:
+      probability = predicted[1]
+      result = 'POS'
+    sample.result = result
+    sample.probability = probability * 100
+    sample.predicted_at = timezone.now()
+    sample.save()
+    return redirect('samples_my-sample-details', sample_id)

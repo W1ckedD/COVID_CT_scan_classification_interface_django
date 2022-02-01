@@ -4,5 +4,7 @@ from . import views
 urlpatterns = [
   path('', views.SamplesView.as_view(), name='samples'),
   path('my-samples/', views.MySamplesView.as_view(), name='samples_my-samples'),
-  path('add-sample/', views.AddSampleView.as_view(), name='samples_add-sample')
+  path('my-samples/<int:id>', views.SampleDetailsView.as_view(), name='samples_my-sample-details'),
+  path('add-sample/', views.AddSampleView.as_view(), name='samples_add-sample'),
+  path('predict/', views.PredictSample.as_view(), name='samples_predict-sample')
 ]
