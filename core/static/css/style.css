@@ -103,6 +103,15 @@ html, body, h1, h2, h3, h4, h5, h6, p, input, textarea, button, a {
   background-color: #ccc;
 }
 
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: rgba(252, 96, 96, 0.7);
+}
+
 .btn-block {
   width: 100%;
 }

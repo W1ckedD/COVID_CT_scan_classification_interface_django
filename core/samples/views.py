@@ -65,8 +65,28 @@ class SampleDetailsView(View):
     sample = get_object_or_404(Sample, id=kwargs.get('id'))
     return render(request, 'samples/my-sample-details.html', context={'sample': sample})
 
+  def post(self, request, *args, **kwargs):
+    visible_to_users = request.POST.get('visible_to_users')
+    visible_to_public = request.POST.get('visible_to_public')
+    sample = get_object_or_404(Sample, id=kwargs.get('id'))
+
+    if visible_to_public is not None:
+      sample.visible_to_users = True
+      sample.visible_to_public = True
+    elif visible_to_users is not None:
+      sample.visible_to_users = True
+      sample.visible_to_public = False
+    else:
+      sample.visible_to_users = False
+      sample.visible_to_public = False
+    sample.save()
+    return redirect('samples_my-sample-details', kwargs.get('id'))
+
 class PredictSample(View):
   def post(self, request, *args, **kwargs):
+    if not request.user.is_authenticated:
+      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
+      return redirect('accounts_login')
     MODEL_DIR = os.path.join(os.getcwd(), 'models', '002.h5')
     cnn_model = load_model(MODEL_DIR)
     sample_id = request.POST.get('sample_id')
@@ -86,3 +106,16 @@ class PredictSample(View):
     sample.predicted_at = timezone.now()
     sample.save()
     return redirect('samples_my-sample-details', sample_id)
+
+class DeleteSample(View):
+  def post(self, request, *args, **kwargs):
+    if not request.user.is_authenticated:
+      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
+      return redirect('accounts_login')
+    sample_id = request.POST.get('sample_id')
+    sample = get_object_or_404(Sample, id=sample_id)
+    IMG_DIR = os.path.join(os.getcwd(), 'media', str(sample.image).split('/')[2])
+    fs = FileSystemStorage()
+    fs.delete(IMG_DIR)
+    sample.delete()
+    return redirect('samples_my-samples')
