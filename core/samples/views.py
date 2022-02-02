@@ -39,6 +39,9 @@ class AddSampleView(View):
     return render(request, 'samples/add-sample.html', context={})
 
   def post(self, request, *args, **kwargs):
+    if not request.user.is_authenticated:
+      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
+      return redirect('accounts_login')
     name = request.POST.get('name')
     image = request.FILES.get('image')
     visible_to_users = request.POST.get('visible_to_users')
@@ -48,15 +51,15 @@ class AddSampleView(View):
     img_url = fs.url(file)
 
     sample = Sample(account=request.user, name=name, image=img_url)
-    if visible_to_users is None:
-      sample.visible_to_users = False
-      sample.visible_to_public = False
-    elif visible_to_public is None:
+    if visible_to_public is not None:
+      sample.visible_to_users = True
+      sample.visible_to_public = True
+    elif visible_to_users is not None:
       sample.visible_to_users = True
       sample.visible_to_public = False
     else:
-      sample.visible_to_public = True
-      sample.visible_to_public = True
+      sample.visible_to_users = False
+      sample.visible_to_public = False
     sample.save()
     return redirect('samples_my-samples')
 
@@ -66,9 +69,17 @@ class SampleDetailsView(View):
     return render(request, 'samples/my-sample-details.html', context={'sample': sample})
 
   def post(self, request, *args, **kwargs):
+    if not request.user.is_authenticated:
+      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
+      return redirect('accounts_login')
     visible_to_users = request.POST.get('visible_to_users')
     visible_to_public = request.POST.get('visible_to_public')
-    sample = get_object_or_404(Sample, id=kwargs.get('id'))
+    sample_id = kwargs.get('id')
+    sample = get_object_or_404(Sample, id=sample_id)
+    if request.user != sample.account:
+      messages.error(request, 'شما دسترسی لازم جهت انجام این عمل را ندارید.')
+      return redirect('samples_my-sample-details', sample_id)
+
 
     if visible_to_public is not None:
       sample.visible_to_users = True
@@ -80,9 +91,10 @@ class SampleDetailsView(View):
       sample.visible_to_users = False
       sample.visible_to_public = False
     sample.save()
-    return redirect('samples_my-sample-details', kwargs.get('id'))
+    messages.success(request, 'تغییرات با موفقیت ثبت شد.')
+    return redirect('samples_my-sample-details', sample_id)
 
-class PredictSample(View):
+class PredictSampleView(View):
   def post(self, request, *args, **kwargs):
     if not request.user.is_authenticated:
       messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
@@ -91,10 +103,13 @@ class PredictSample(View):
     cnn_model = load_model(MODEL_DIR)
     sample_id = request.POST.get('sample_id')
     sample = get_object_or_404(Sample, id=sample_id)
+    if request.user != sample.account:
+      messages.error(request, 'شما دسترسی لازم جهت انجام این عمل را ندارید.')
+      return redirect('samples_my-sample-details', sample_id)
     IMG_DIR = os.path.join(os.getcwd(), 'media', str(sample.image).split('/')[2])
     img = preprocess_img(IMG_DIR)
     predicted = cnn_model.predict(img)[0]
-    print(predicted)
+
     if predicted[0] > predicted[1]:
       probability = predicted[0]
       result = 'NEG'
@@ -107,13 +122,16 @@ class PredictSample(View):
     sample.save()
     return redirect('samples_my-sample-details', sample_id)
 
-class DeleteSample(View):
+class DeleteSampleView(View):
   def post(self, request, *args, **kwargs):
     if not request.user.is_authenticated:
       messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
       return redirect('accounts_login')
     sample_id = request.POST.get('sample_id')
     sample = get_object_or_404(Sample, id=sample_id)
+    if request.user != sample.account:
+      messages.error(request, 'شما دسترسی لازم جهت انجام این عمل را ندارید.')
+      return redirect('samples_my-sample-details', sample_id)
     IMG_DIR = os.path.join(os.getcwd(), 'media', str(sample.image).split('/')[2])
     fs = FileSystemStorage()
     fs.delete(IMG_DIR)

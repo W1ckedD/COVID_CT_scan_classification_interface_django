@@ -19,8 +19,12 @@
     {% endif %}
       <a class="nav-link" href="{% url 'index' %}">صفحه اصلی</a>
     </li>
+    {% if 'samples' in request.path %}
+    <li class="nav-item active">
+    {% else %}
     <li class="nav-item">
-      <a class="nav-link" href="#">تصاویر</a>
+    {% endif %}
+      <a class="nav-link" href="{% url 'samples' %}">تصاویر</a>
     </li>
   </ul>
   {% if user.is_authenticated %}

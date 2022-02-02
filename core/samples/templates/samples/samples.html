@@ -1,8 +1,11 @@
 {% extends 'base.html' %} {% block title %}تصاویر{% endblock %} 
 {% block content%}
 
+{% if 'my-samples' in request.path %}
 <h1>تصاویر من</h1>
-
+{% else %}
+<h1>تصاویر</h1>
+{% endif %}
 {% if samples|length == 0 %}
 <h4>تصویری یافت نشد.</h4>
 {% else %}
@@ -13,6 +16,11 @@
       <img src="{{ sample.image }}" alt="" class="sample-img" />
       <div class="sample-info">
         <h4 class="sample-title">{{ sample.name }}</h4>
+        {% if 'my-samples' not in request.path %}
+        <h5 style="text-align: center;">
+          کاربر مالک:{{sample.account.first_name}} {{sample.account.last_name}}
+        </h5>
+        {% endif %}
         <div class="row">
           <div class="col-lg-6">
             <strong class="sample-tag">وضعیت: </strong>
