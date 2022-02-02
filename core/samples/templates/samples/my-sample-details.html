@@ -60,6 +60,7 @@
         <form action="{% url 'samples_predict-sample' %}" method="post">
           {% csrf_token %}
           <input type="hidden" name="sample_id" value="{{ sample.id }}">
+          {% if request.user == sample.account %}
           <button type="submit" class="btn btn-primary btn-block">
             {% if sample.probability %}
             محاسبه مجدد
@@ -67,11 +68,19 @@
             محاسبه
             {% endif %}
           </button>
+          {% else %}
+          <button type="submit" class="btn btn-primary btn-block" disabled>
+            {% if sample.probability %}
+            محاسبه مجدد
+            {% else %}
+            محاسبه
+            {% endif %}
+          </button>
+          {% endif %}
         </form>
       </div>
-      
-      
     </div>
+    {% if request.user == sample.account %}
     <div class="row sample-section-odd">
       <div class="col-lg-6 col-sm-12">
         <form action="{% url 'samples_my-sample-details' sample.id %}" method="post">
@@ -105,6 +114,8 @@
         </form>
       </div>
     </div>
+    {% endif %}
+
   </div>
 </div>
 <script src="{% static 'js/add-sample.js' %}"></script>

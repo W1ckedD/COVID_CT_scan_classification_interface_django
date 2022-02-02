@@ -116,6 +116,12 @@ html, body, h1, h2, h3, h4, h5, h6, p, input, textarea, button, a {
   width: 100%;
 }
 
+.btn:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: default;
+}
+
 .checkbox-container {
   display: flex;
   flex-direction: row-reverse;
