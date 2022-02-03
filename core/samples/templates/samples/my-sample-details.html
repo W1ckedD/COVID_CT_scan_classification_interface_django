@@ -1,7 +1,4 @@
-{% extends 'base.html' %} 
-{% load static %}
-{% block title %}{{sample.account}} | {{ sample.name}}
-{% endblock %} {% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}{{sample.account}} | {{ sample.name}} {% endblock %} {% block content %}
 <h1>{{ sample.name }}</h1>
 <div class="row">
   <div class="col-lg-6 order-1 order-lg-2">
@@ -12,16 +9,26 @@
       <h3>مشخصات</h3>
       <div class="col-lg-6 col-sm-12">
         <p>
-          <strong class="sample-tag">نام نمونه: </strong>
-          {{ sample.name }}
-        </p>
-      </div>
-      <div class="col-lg-6 col-sm-12">
-        <p>
           <strong class="sample-tag">نام کاربر مالک: </strong>
           {{ sample.account.first_name }} {{ sample.account.last_name }}
         </p>
       </div>
+      <div class="col-lg-6 col-sm-12">
+        <p>
+          <strong class="sample-tag">نام نمونه: </strong>
+          {% if request.user == sample.account %}
+          <form action="{% url 'samples_edit-sample' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="sample_id" value="{{ sample.id }}">
+            <input type="text" dir="ltr" name="name" class="form-control" value="{{ sample.name }}">
+            <button class="btn btn-secondary" type="submit">ذخیره نام</button>
+          </form>
+          {% else %}
+          {{ sample.name }}
+          {% endif %}
+        </p>
+      </div>
+      
       <div class="col-lg-6 col-sm-12">
         <p>
           <strong class="sample-tag">تاریخ بارگذاری: </strong>
@@ -45,36 +52,28 @@
       <div class="col-lg-6 col-sm-12">
         <p>
           <strong class="sample-tag">درصد احتمال: </strong>
-          {% if sample.probability %} {{ sample.probability|floatformat:8 }} {% else %} محاسبه
-          نشده {% endif %}
+          {% if sample.probability %} {{ sample.probability|floatformat:8 }}
+          {%else %} محاسبه نشده {% endif %}
         </p>
       </div>
       <div class="col-lg-6 col-sm-12">
         <p>
           <strong class="sample-tag">تاریخ آخرین محاسبه: </strong>
-          {% if sample.predicted_at %} {{ sample.predicted_at }} {% else %} محاسبه
-          نشده {% endif %}
+          {% if sample.predicted_at %} {{ sample.predicted_at }} {% else %}
+          محاسبه نشده {% endif %}
         </p>
       </div>
       <div class="col-lg-6 col-sm-12">
         <form action="{% url 'samples_predict-sample' %}" method="post">
           {% csrf_token %}
-          <input type="hidden" name="sample_id" value="{{ sample.id }}">
+          <input type="hidden" name="sample_id" value="{{ sample.id }}" />
           {% if request.user == sample.account %}
           <button type="submit" class="btn btn-primary btn-block">
-            {% if sample.probability %}
-            محاسبه مجدد
-            {% else %}
-            محاسبه
-            {% endif %}
+            {% if sample.probability %} محاسبه مجدد {% else %} محاسبه {% endif %}
           </button>
           {% else %}
           <button type="submit" class="btn btn-primary btn-block" disabled>
-            {% if sample.probability %}
-            محاسبه مجدد
-            {% else %}
-            محاسبه
-            {% endif %}
+            {% if sample.probability %} محاسبه مجدد {% else %} محاسبه {% endif %}
           </button>
           {% endif %}
         </form>
@@ -83,51 +82,72 @@
     {% if request.user == sample.account %}
     <div class="row sample-section-odd">
       <div class="col-lg-6 col-sm-12">
-        <form action="{% url 'samples_my-sample-details' sample.id %}" method="post">
+        <form
+          action="{% url 'samples_my-sample-details' sample.id %}"
+          method="post"
+        >
           {% csrf_token %}
           <div class="checkbox-container">
             <label for="visible_to_users">نمایش برای سایر کاربران</label>
             {% if sample.visible_to_public %}
-            <input type="checkbox" name="visible_to_users" id="users-checkbox" checked disabled/>
+            <input
+              type="checkbox"
+              name="visible_to_users"
+              id="users-checkbox"
+              checked
+              disabled
+            />
             {% elif sample.visible_to_users %}
-            <input type="checkbox" name="visible_to_users" id="users-checkbox" checked />
+            <input
+              type="checkbox"
+              name="visible_to_users"
+              id="users-checkbox"
+              checked
+            />
             {% else %}
-            <input type="checkbox" name="visible_to_users" id="users-checkbox" />
+            <input
+              type="checkbox"
+              name="visible_to_users"
+              id="users-checkbox"
+            />
             {% endif %}
           </div>
           <div class="checkbox-container">
             <label for="visible_to_public">نمایش برای عموم</label>
             {% if sample.visible_to_public %}
-            <input type="checkbox" name="visible_to_public" id="public-checkbox" checked />
+            <input
+              type="checkbox"
+              name="visible_to_public"
+              id="public-checkbox"
+              checked
+            />
             {% else %}
-            <input type="checkbox" name="visible_to_public" id="public-checkbox" />
+            <input
+              type="checkbox"
+              name="visible_to_public"
+              id="public-checkbox"
+            />
             {% endif %}
           </div>
           <button type="submit" class="btn btn-secondary">ذخیره</button>
         </form>
       </div>
       <div class="col-lg-6 col-sm-12">
-        <form action="{% url 'samples_delete-sample' %}" method="post" id="delete_form">
+        <form
+          action="{% url 'samples_delete-sample' %}"
+          method="post"
+          id="delete_form"
+        >
           {% csrf_token %}
-          <input type="hidden" name="sample_id" value="{{ sample.id }}">
+          <input type="hidden" name="sample_id" value="{{ sample.id }}" />
           <button type="submit" class="btn btn-danger">حذف نمونه</button>
         </form>
       </div>
     </div>
     {% endif %}
-
   </div>
 </div>
 <script src="{% static 'js/add-sample.js' %}"></script>
-<script>
-  const deleteForm = document.querySelector('#delete_form');
-  deleteForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const deleteSample = confirm('آیا از تصمیم خود اطمینان دارید؟');
-    if (deleteSample) {
-      event.target.submit();
-    }
-  });
-</script>
+<script src="{% static 'js/my-sample-details.js' %}"></script>
 
 {% endblock %}

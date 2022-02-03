@@ -112,6 +112,25 @@ class PredictSampleView(View):
     sample.save()
     return redirect('samples_my-sample-details', sample_id)
 
+class EditSampleNameView(View):
+  @login_required('accounts_login')
+  def post(self, request, *args, **kwargs):
+    sample_id = request.POST.get('sample_id')
+    sample = get_object_or_404(Sample, id=sample_id)
+    if request.user != sample.account:
+      messages.error(request, 'شما دسترسی لازم جهت انجام این عمل را ندارید.')
+      return redirect('samples_my-sample-details', sample_id)
+    name = request.POST.get('name')
+    if not name:
+      messages.error(request, 'لطفا نام نمونه را وارد نمایید.')
+      return redirect('samples_my-sample-details', sample_id)
+
+    sample.name = name
+    sample.save()
+    messages.success(request, 'تغییرات با موفقیت ثبت شد.')
+    return redirect('samples_my-sample-details', sample_id)
+
+
 class DeleteSampleView(View):
   @login_required('accounts_login')
   def post(self, request, *args, **kwargs):

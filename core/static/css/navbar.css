@@ -1,5 +1,10 @@
 .navbar-toggler {
   display: none;
+  border: none;
+  background-color: transparent;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 22px;
 }
 
 .navbar {
@@ -62,4 +67,10 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .navbar-toggler {
+    display: block;
+  }
 }

@@ -85,3 +85,46 @@ def add_sample_validation(view_function):
 
     return view_function(_, request, *args, **kwargs)
   return wrapper
+
+def edit_account_validation(view_function):
+  def wrapper(_, request, *args, **kwargs):
+    first_name = request.POST.get('first_name')
+    last_name = request.POST.get('last_name')
+    email = request.POST.get('email')
+
+    if (
+      not first_name 
+      or not last_name
+      or not email
+    ):
+      messages.error(request, 'لطفا تمامی فیلد ها را پر کنید.')
+      return redirect('accounts_register')
+
+    return view_function(_, request, *args, **kwargs)
+  return wrapper
+
+def change_password_validation(view_function):
+  def wrapper(_, request, *args, **kwargs):
+    old_password = request.POST.get('old_password')
+    new_password = request.POST.get('new_password')
+    new_password_2 = request.POST.get('new_password_2')
+
+    if (
+      not old_password
+      or not new_password
+      or not new_password_2
+    ):
+      messages.error(request, 'لطفا تمامی فیلد ها را پر کنید.')
+      return redirect('accounts_register')
+    
+    if new_password != new_password_2:
+      messages.error(request, 'رمز عبور با تکرار آن همخوانی ندارد.')
+      return redirect('accounts_register')
+    
+    if new_password == old_password:
+      messages.error(request, 'رمز عبور فعلی و رمز عبور جدید نمی توانند یکسان باشند.')
+      return redirect('accounts_register')
+
+
+    return view_function(_, request, *args, **kwargs)
+  return wrapper
