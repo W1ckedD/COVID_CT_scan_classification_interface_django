@@ -13,28 +13,30 @@
 
   <ul class="navbar-nav">
     {% if request.path == '/' %}
-    <li class="nav-item active">
-    {% else  %}
+    <li class="nav-item active">{% else %}</li>
+
     <li class="nav-item">
-    {% endif %}
+      {% endif %}
       <a class="nav-link" href="{% url 'index' %}">صفحه اصلی</a>
     </li>
     {% if 'samples' in request.path %}
-    <li class="nav-item active">
-    {% else %}
+    <li class="nav-item active">{% else %}</li>
+
     <li class="nav-item">
-    {% endif %}
+      {% endif %}
       <a class="nav-link" href="{% url 'samples' %}">تصاویر</a>
     </li>
   </ul>
   {% if user.is_authenticated %}
   <ul class="navbar-nav">
     {% if 'dashboard' in request.path %}
-    <li class="nav-item active">
-    {% else %}
+    <li class="nav-item active">{% else %}</li>
+
     <li class="nav-item">
-    {% endif %}
-      <a href="{% url 'accounts_dashboard' %}" class="nav-link">داشبورد</a>
+      {% endif %}
+      <a href="{% url 'accounts_dashboard' %}" class="nav-link">
+        داشبورد {{ request.user }}
+      </a>
     </li>
     <div class="nav-item">
       <form action="{% url 'accounts_logout' %}" method="post">
@@ -46,17 +48,17 @@
   {% else %}
   <ul class="navbar-nav">
     {% if 'login' in request.path %}
-    <li class="nav-item active">
-    {% else %}
+    <li class="nav-item active">{% else %}</li>
+
     <li class="nav-item">
-    {% endif %}
+      {% endif %}
       <a href="{% url 'accounts_login' %}" class="nav-link">ورود</a>
     </li>
     {% if 'register' in request.path %}
-    <li class="nav-item active">
-    {% else %}
+    <li class="nav-item active">{% else %}</li>
+
     <li class="nav-item">
-    {% endif %}
+      {% endif %}
       <a href="{% url 'accounts_register' %}" class="nav-link">ثبت نام</a>
     </li>
   </ul>

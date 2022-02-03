@@ -9,7 +9,7 @@ from .models import Sample
 
 from tensorflow.keras.models import load_model
 from utils.preprocess import preprocess_img
-from utils.decorators import login_required
+from utils.decorators import login_required, add_sample_validation
 
 
 class SamplesView(View):
@@ -28,13 +28,13 @@ class MySamplesView(View):
     return render(request, 'samples/samples.html', context={'samples': samples})
 
 
-
 class AddSampleView(View):
   @login_required('accounts_login')
   def get(self, request, *args, **kwargs):
     return render(request, 'samples/add-sample.html', context={})
 
   @login_required('accounts_login')
+  @add_sample_validation
   def post(self, request, *args, **kwargs):
     name = request.POST.get('name')
     image = request.FILES.get('image')

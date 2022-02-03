@@ -69,3 +69,19 @@ def register_validation(view_function):
       return redirect('accounts_register')
     return view_function(_, request, *args, **kwargs)
   return wrapper
+
+def add_sample_validation(view_function):
+  def wrapper(_, request, *args, **kwargs):
+    name = request.POST.get('name')
+    image = request.FILES.get('image')
+
+    if not name or name is None:
+      messages.error(request, 'لطفا عنوان نمونه را وارد کنید.')
+      return redirect('samples_add-sample')
+
+    if image is None:
+      messages.error(request, 'لطفا تصویر نمونه را جهت بارگذاری انتخاب کنید.')
+      return redirect('samples_add-sample')
+
+    return view_function(_, request, *args, **kwargs)
+  return wrapper
