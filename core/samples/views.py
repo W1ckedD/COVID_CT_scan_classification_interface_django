@@ -9,6 +9,7 @@ from .models import Sample
 
 from tensorflow.keras.models import load_model
 from utils.preprocess import preprocess_img
+from utils.decorators import login_required
 
 
 class SamplesView(View):
@@ -21,27 +22,20 @@ class SamplesView(View):
       return render(request, 'samples/samples.html', context={'samples': samples})
 
 class MySamplesView(View):
+  @login_required('accounts_login')
   def get(self, request, *args, **kwargs):
-    if request.user.is_authenticated:
-      samples = Sample.objects.filter(account=request.user).order_by('-issued_at')
-      return render(request, 'samples/samples.html', context={'samples': samples})
-    else:
-      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
-      return redirect('accounts_login')
+    samples = Sample.objects.filter(account=request.user).order_by('-issued_at')
+    return render(request, 'samples/samples.html', context={'samples': samples})
+
 
 
 class AddSampleView(View):
+  @login_required('accounts_login')
   def get(self, request, *args, **kwargs):
-    if not request.user.is_authenticated:
-      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
-      return redirect('accounts_login')
-
     return render(request, 'samples/add-sample.html', context={})
 
+  @login_required('accounts_login')
   def post(self, request, *args, **kwargs):
-    if not request.user.is_authenticated:
-      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
-      return redirect('accounts_login')
     name = request.POST.get('name')
     image = request.FILES.get('image')
     visible_to_users = request.POST.get('visible_to_users')
@@ -68,10 +62,8 @@ class SampleDetailsView(View):
     sample = get_object_or_404(Sample, id=kwargs.get('id'))
     return render(request, 'samples/my-sample-details.html', context={'sample': sample})
 
+  @login_required('accounts_login')
   def post(self, request, *args, **kwargs):
-    if not request.user.is_authenticated:
-      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
-      return redirect('accounts_login')
     visible_to_users = request.POST.get('visible_to_users')
     visible_to_public = request.POST.get('visible_to_public')
     sample_id = kwargs.get('id')
@@ -95,10 +87,8 @@ class SampleDetailsView(View):
     return redirect('samples_my-sample-details', sample_id)
 
 class PredictSampleView(View):
+  @login_required('accounts_login')
   def post(self, request, *args, **kwargs):
-    if not request.user.is_authenticated:
-      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
-      return redirect('accounts_login')
     MODEL_DIR = os.path.join(os.getcwd(), 'models', '002.h5')
     cnn_model = load_model(MODEL_DIR)
     sample_id = request.POST.get('sample_id')
@@ -123,10 +113,8 @@ class PredictSampleView(View):
     return redirect('samples_my-sample-details', sample_id)
 
 class DeleteSampleView(View):
+  @login_required('accounts_login')
   def post(self, request, *args, **kwargs):
-    if not request.user.is_authenticated:
-      messages.error(request, 'برای استفاده از این بخش ابتدا به حساب کاربری خود وارد شوید.')
-      return redirect('accounts_login')
     sample_id = request.POST.get('sample_id')
     sample = get_object_or_404(Sample, id=sample_id)
     if request.user != sample.account:

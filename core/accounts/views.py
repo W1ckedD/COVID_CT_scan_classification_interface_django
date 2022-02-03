@@ -2,18 +2,22 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
 from django.views import View
+from utils.decorators import (
+  login_required,
+  is_authenticated,
+  login_validation,
+  register_validation
+)
 
 class LoginView(View):
+  @is_authenticated
   def get(self, request, *args, **kwargs):
     return render(request, 'accounts/login.html', context={})
 
+  @login_validation
   def post(self, request, *args, **kwargs):
     email_or_username = request.POST.get('email_or_username')
     password = request.POST.get('password')
-
-    if not email_or_username or not password: 
-      messages.error(request, 'لطفا تمامی فیلد ها را پر کنید.')
-      return redirect('accounts_login')
     
     email = email_or_username.lower().strip() if '@' in email_or_username else None
     username = email_or_username.lower().strip() if '@' not in email_or_username else None
@@ -42,44 +46,17 @@ class LoginView(View):
 
 
 class RegisterView(View):
+  @is_authenticated
   def get(self, request, *args, **kwargs):
     return render(request, 'accounts/register.html', context={})
 
+  @register_validation
   def post(self, request, *args, **kwargs):
     first_name = request.POST.get('first_name')
     last_name = request.POST.get('last_name')
     email = request.POST.get('email')    
     username = request.POST.get('username')
     password = request.POST.get('password')
-    password_2 = request.POST.get('password2')
-
-    if (
-      not first_name 
-      or not last_name 
-      or not email 
-      or not username 
-      or not password 
-      or not password_2
-    ):
-      messages.error(request, 'لطفا تمامی فیلد ها را پر کنید.')
-      return redirect('accounts_register')
-    
-    if User.objects.filter(username=username.lower().strip()).exists():
-      messages.error(request, 'این نام کاربری از قبل در سیستم ثبت شده است.')
-      return redirect('accounts_register')
-
-    if User.objects.filter(email=email.lower().strip()).exists(): 
-      messages.error(request, 'این ایمیل برای کاربری دیگر در سیستم ثبت شده است.')
-      return redirect('accounts_register')
-
-    if password != password_2:
-      messages.error(request, 'رمز عبور با تکرار آن همخوانی ندارد.')
-      return redirect('accounts_register')
-
-    if '@' in username:
-      messages.error(request, 'نام کاربری نمی تواند شامل کاراکتر "@" باشد.')
-      return redirect('accounts_register')
-
 
     user = User.objects.create_user(
       username=username.lower().strip(),
@@ -95,15 +72,15 @@ class RegisterView(View):
     return redirect('accounts_dashboard')
 
 class LogoutView(View):
+  @login_required('accounts_login')
   def post(self, request, *args, **kwargs):
     auth.logout(request)
     return redirect('accounts_login')
 
 
 class DashboardView(View):
+
+  @login_required('accounts_login')
   def get(self, request, *args, **kwargs):
-    if request.user.is_authenticated:
-      return render(request, 'accounts/dashboard.html', context={})
-    else:
-      messages.error(request, 'برای مشاهده این قسمت، ابتدا به حساب کاربری خود وارد شوید.')
-      return redirect('accounts_login')
+    return render(request, 'accounts/dashboard.html', context={})
+   
