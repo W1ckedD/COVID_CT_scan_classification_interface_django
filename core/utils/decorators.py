@@ -128,3 +128,14 @@ def change_password_validation(view_function):
 
     return view_function(_, request, *args, **kwargs)
   return wrapper
+
+def admin_required(login_path_name):
+  def decorator(view_function):
+    def wrapper(_, request, *args, **kwargs):
+      if request.user.is_authenticated and request.user.is_staff:
+        return view_function(_, request, *args, **kwargs)
+      else:
+        messages.error(request, 'تنها مدیران به این قسمت دسترسی دارند.')
+        return redirect(login_path_name)
+    return wrapper
+  return decorator

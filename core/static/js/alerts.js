@@ -1,6 +1,5 @@
 const closeBtn = document.querySelector('#message div button.close');
-
-const messageContainer = closeBtn.parentElement.parentElement.parentElement;
+const messageContainer = document.querySelector('#message');
 closeBtn.addEventListener('click', function (event) {
   messageContainer.style.opacity = 0;
 });
