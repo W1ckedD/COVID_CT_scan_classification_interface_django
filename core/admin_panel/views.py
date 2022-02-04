@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.views import View
-from django.contrib.auth.models import User
+from django.contrib.admin.models import LogEntry
 from django.contrib import auth, messages
 from utils.decorators import (
   admin_required
@@ -25,3 +25,12 @@ class AdminDashboardView(View):
   @admin_required('admin_panel_login')
   def get(self, request, *args, **kwargs):
     return render(request, 'admin_panel/dashboard.html', context={})
+
+class LogEnteryView(View):
+  @admin_required('admin_panel_login')
+  def get(self, request, *args, **kwargs):
+    logs = LogEntry.objects.all()
+    print(logs)
+    for log in logs:
+      print(log)
+    return render(request, 'admin_panel/logs.html', context={'logs': logs})

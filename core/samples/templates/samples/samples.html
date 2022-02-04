@@ -1,14 +1,59 @@
 {% extends 'base.html' %} {% block title %}تصاویر{% endblock %} 
 {% block content%}
 
+
+{% if samples|length == 0 %}
+<h4>تصویری یافت نشد.</h4>
+{% else %}
+<div id="search">
+  <h4>جستجوی پیشرفته</h4>
+  <form action="">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="form-group">
+          <label for="name">نام نمونه</label>
+          <input type="text" name="name" class="form-control" id="name">
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="form-group">
+          <label for="username">نام کاربری کاربر مالک</label>
+          <input type="text" name="username" class="form-control" id="username">
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="form-group">
+          <label for="owner_name">نام کاربر مالک</label>
+          <input type="text" name="owner_name" class="form-control" id="owner_name">
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <fieldset name="result">
+          <legend for="result">نتیجه</legend>
+          <div class="checkbox-container">
+            <label for="pos">کوید مثبت</label>
+            <input type="checkbox" name="pos" id="pos" />
+          </div>
+          <div class="checkbox-container">
+            <label for="neg">کوید منفی</label>
+            <input type="checkbox" name="neg" id="neg" />
+          </div>
+          <div class="checkbox-container">
+            <label for="tbd">نا مشخص</label>
+            <input type="checkbox" name="tbd" id="tbd" />
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">اعمال فیلتر</button>
+  </form>
+</div>
 {% if 'my-samples' in request.path %}
 <h1>تصاویر من</h1>
 {% else %}
 <h1>تصاویر</h1>
 {% endif %}
-{% if samples|length == 0 %}
-<h4>تصویری یافت نشد.</h4>
-{% else %}
 <div class="row row-eq-height">
   {% for sample in samples %}
   <div class="col-lg-4 col-md-6">

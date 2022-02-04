@@ -1,4 +1,36 @@
 <nav class="sidebar" id="sidebar">
+  {% if request.user.is_staff %}
+  <ul class="sidebar-menu">
+    {% if 'dashboard' in request.path %}
+    <li class="menu-item active">
+    {% else %}
+    <li class="menu-item">
+    {% endif %}
+      <a href="{% url 'accounts_dashboard' %}" class="menu-link">داشبورد</a>
+    </li>
+    {% if 'my-samples' in request.path %}
+    <li class="menu-item active">
+    {% else %}
+    <li class="menu-item">
+    {% endif %}
+      <a href="{% url 'samples_my-samples' %}" class="menu-link">تصاویر من</a>
+    </li>
+    {% if 'logs' in request.path %}
+    <li class="menu-item active">
+    {% else %}
+    <li class="menu-item">
+    {% endif %}
+      <a href="{% url 'admin_panel_logs' %}" class="menu-link">لاگ ها</a>
+    </li>
+    {% if 'settings' in request.path %}
+    <li class="menu-item active">
+    {% else %}
+    <li class="menu-item">
+    {% endif %}
+      <a href="#" class="menu-link">تنظیمات</a>
+    </li>
+  </ul>
+  {% else %}
   <ul class="sidebar-menu">
     {% if 'dashboard' in request.path %}
     <li class="menu-item active">
@@ -29,4 +61,5 @@
       <a href="#" class="menu-link">تنظیمات</a>
     </li>
   </ul>
+  {% endif %}
 </nav>

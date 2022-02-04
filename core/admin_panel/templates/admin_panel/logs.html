@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}لاگ ها{% endblock %}
+{% block content %}
+<h1>لاگ ها</h1>
+{% for log in logs %}
+{{ log }}
+{% endfor %}
+{% endblock %}
