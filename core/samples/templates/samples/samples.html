@@ -2,12 +2,13 @@
 {% block content%}
 
 
-{% if samples|length == 0 %}
-<h4>تصویری یافت نشد.</h4>
-{% else %}
 <div id="search">
   <h4>جستجوی پیشرفته</h4>
-  <form action="">
+  {% if 'my-samples' in request.path %}
+  <form action="{% url 'samples_my-samples' %}" method="get">
+  {% else %}
+  <form action="{%url 'samples' %}" method="get">
+  {% endif %}
     {% csrf_token %}
     <div class="row">
       <div class="col-lg-3 col-md-4 col-sm-6">
@@ -49,6 +50,10 @@
     <button type="submit" class="btn btn-primary">اعمال فیلتر</button>
   </form>
 </div>
+
+{% if samples|length == 0 %}
+<h4>تصویری یافت نشد.</h4>
+{% else %}
 {% if 'my-samples' in request.path %}
 <h1>تصاویر من</h1>
 {% else %}

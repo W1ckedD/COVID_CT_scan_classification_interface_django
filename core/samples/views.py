@@ -1,10 +1,11 @@
 import os
+from unittest import result
 from django.utils import timezone
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
-
+from django.db.models import F, Q
 from .models import Sample
 
 from tensorflow.keras.models import load_model
@@ -15,7 +16,19 @@ from utils.decorators import login_required, add_sample_validation
 class SamplesView(View):
   def get(self, request, *args, **kwargs):
     if request.user.is_authenticated:
-      samples = Sample.objects.filter(visible_to_users=True).order_by('-issued_at')
+      name = request.GET.get('name')
+      username = request.GET.get('username')
+      owner_name = request.GET.get('owner_name')
+      pos = request.GET.get('pos')
+      neg = request.GET.get('neg')
+      tbd = request.GET.get('tbd')
+      samples = Sample.objects.filter(visible_to_users=True)
+      if name:
+        samples = samples.filter(name__contains=name)
+      if username:
+        samples = samples.filter(account__username=username)
+      
+      samples = samples.order_by('-issued_at')
       return render(request, 'samples/samples.html', context={'samples': samples})
     else:
       samples = Sample.objects.filter(visible_to_public=True).order_by('-issued_at')

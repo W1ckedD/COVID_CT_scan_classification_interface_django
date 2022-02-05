@@ -5,9 +5,7 @@
   >
     <span><i class="fa fa-bars"></i></span>
   </button>
-  <button id="btnSearch">
-    <span><i class="fa fa-search"></i></span>
-  </button>
+  
 
   <ul class="navbar-nav">
     {% if request.path == '/' %}
@@ -27,6 +25,11 @@
   </ul>
   {% if user.is_authenticated %}
   <ul class="navbar-nav">
+    {% if 'samples' in request.path %}
+    <button id="btnSearch">
+      <span><i class="fa fa-search"></i></span>
+    </button>
+    {% endif %}
     {% if 'dashboard' in request.path %}
     <li class="nav-item active">{% else %}</li>
 
@@ -45,6 +48,11 @@
   </ul>
   {% else %}
   <ul class="navbar-nav">
+    {% if 'samples' in request.path %}
+    <button id="btnSearch">
+      <span><i class="fa fa-search"></i></span>
+    </button>
+    {% endif %}
     {% if 'login' in request.path %}
     <li class="nav-item active">{% else %}</li>
 
