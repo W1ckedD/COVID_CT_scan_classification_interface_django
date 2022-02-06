@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
-from django.db.models import F, Q
+from django.db.models import F, Q, functions, Value
 from .models import Sample
 
 from tensorflow.keras.models import load_model
@@ -15,23 +15,32 @@ from utils.decorators import login_required, add_sample_validation
 
 class SamplesView(View):
   def get(self, request, *args, **kwargs):
+    name = request.GET.get('name')
+    username = request.GET.get('username')
+    owner_name = request.GET.get('owner_name')
+    pos = request.GET.get('pos')
+    neg = request.GET.get('neg')
+    tbd = request.GET.get('tbd')
+    samples = Sample.objects.annotate(
+      owner_name=functions.Concat('account__first_name', Value(' '), 'account__last_name')
+    )
+    if name:
+      samples = samples.filter(name__contains=name)
+    if username:
+      samples = samples.filter(account__username__icontains=username)
+    if owner_name:
+      samples = samples.filter(owner_name__contains=owner_name)
+    pos_query = Q(result='POS') if pos else Q()
+    neg_query = Q(result='NEG') if neg else Q()
+    tbd_query = Q(result='TBD') if tbd else Q()
+    
+    samples = samples.filter(pos_query |neg_query | tbd_query)
+
     if request.user.is_authenticated:
-      name = request.GET.get('name')
-      username = request.GET.get('username')
-      owner_name = request.GET.get('owner_name')
-      pos = request.GET.get('pos')
-      neg = request.GET.get('neg')
-      tbd = request.GET.get('tbd')
-      samples = Sample.objects.filter(visible_to_users=True)
-      if name:
-        samples = samples.filter(name__contains=name)
-      if username:
-        samples = samples.filter(account__username=username)
-      
-      samples = samples.order_by('-issued_at')
+      samples = samples.filter(visible_to_users=True).order_by('-issued_at')
       return render(request, 'samples/samples.html', context={'samples': samples})
     else:
-      samples = Sample.objects.filter(visible_to_public=True).order_by('-issued_at')
+      samples = samples.filter(visible_to_public=True).order_by('-issued_at')
       return render(request, 'samples/samples.html', context={'samples': samples})
 
 class MySamplesView(View):
