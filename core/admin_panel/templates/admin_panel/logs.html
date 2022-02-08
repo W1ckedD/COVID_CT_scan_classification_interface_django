@@ -2,10 +2,24 @@
 {% block title %}لاگ ها{% endblock %}
 {% block content %}
 <h1>لاگ ها</h1>
-{% for log in logs %}
-{{ log.account }}
-{{ log.action_type }}
-{{ log.msg }}
-{{ log.created_at }}
-{% endfor %}
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">کاربر</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for log in logs %}
+      <tr>
+        <th scope="row">1</th>
+        <td>{{ log.account }}</td>
+        <td>{{ log.action_type }}</td>
+        <td>{{ log.success }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

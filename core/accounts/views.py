@@ -118,14 +118,15 @@ class RegisterView(View):
 class LogoutView(View):
   @login_required('accounts_login')
   def post(self, request, *args, **kwargs):
-    auth.logout(request)
 
     # Log
-    log = Log.objects.create(
-      account=request.user,
-      action_type='AUTH',
-      msg='خروج موفق از حساب کاربری.'
-    )
+    if not request.user.is_staff:
+      log = Log.objects.create(
+        account=request.user,
+        action_type='AUTH',
+        msg='خروج موفق از حساب کاربری.'
+      )
+    auth.logout(request)
     return redirect('accounts_login')
 
 

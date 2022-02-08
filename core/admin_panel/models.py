@@ -12,6 +12,6 @@ class Log(models.Model):
     ('UPDATE', 'update object in the db'),
     ('DELETE', 'delete object in the db'),
     ('PREDICT', 'use the COVID prediction api'),
-  ]),
-  success = models.BooleanField(default=True),
+  ])
+  success = models.BooleanField(default=True)
   created_at = models.DateTimeField(auto_now_add=True)
