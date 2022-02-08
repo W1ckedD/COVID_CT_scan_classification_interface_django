@@ -14,5 +14,4 @@ class Log(models.Model):
     ('PREDICT', 'use the COVID prediction api'),
   ]),
   success = models.BooleanField(default=True),
-  failure_msg = models.CharField(max_length=150, blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)

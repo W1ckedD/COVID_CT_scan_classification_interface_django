@@ -35,6 +35,13 @@ class LoginView(View):
         return redirect('accounts_login')
       user = User.objects.get(email=email)
       if not user.check_password(password):
+        # Log
+        log = Log.objects.create(
+          account=request.user,
+          action_type='AUTH',
+          msg='ورود ناموفق به حساب کاربری به دلیل رمز عبور نادرست.',
+          success=False,
+        )
         messages.error(request, 'نام کاربری / ایمیل یا رمز عبور اشتباه است.')
         return redirect('accounts_login')
       
@@ -45,7 +52,7 @@ class LoginView(View):
       log = Log.objects.create(
         account=request.user,
         action_type='AUTH',
-        msg='کاربر با ایمیل به حساب کاربری خود وارد شد.'
+        msg='ورود موفق به حساب کاربری.'
       )
 
       return redirect('accounts_dashboard')
@@ -54,6 +61,13 @@ class LoginView(View):
       user = auth.authenticate(username=username, password=password)
       if user is None:
         messages.error(request, 'نام کاربری / ایمیل یا رمز عبور اشتباه است.')
+        # Log
+        log = Log.objects.create(
+          account=request.user,
+          action_type='AUTH',
+          msg='ورود ناموفق به حساب کاربری به دلیل رمز عبور نادرست.',
+          success=False,
+        )
         return redirect('accounts_login')
       auth.login(request, user)
       messages.success(request, 'خوش آمدید.')
@@ -62,7 +76,7 @@ class LoginView(View):
       log = Log.objects.create(
         account=request.user,
         action_type='AUTH',
-        msg='کاربر با نام کاربری به حساب کاربری خود وارد شد.'
+        msg='ورود موفق به حساب کاربری.'
       )
       
       return redirect('accounts_dashboard')
@@ -110,7 +124,7 @@ class LogoutView(View):
     log = Log.objects.create(
       account=request.user,
       action_type='AUTH',
-      msg='کاربر از حساب کاربری خود خارج شد.'
+      msg='خروج موفق از حساب کاربری.'
     )
     return redirect('accounts_login')
 
@@ -135,6 +149,12 @@ class EditAccountView(View):
     if email.lower().strip() != user.email:
       if User.objects.filter(email=email.lower().strip()).exists():
         messages.error(request, 'این ایمیل قبلا در سیستم ثبت شده است.')
+        log = Log.objects.create(
+          account=request.user,
+          action_type='UPDATE',
+          msg='تغییرات ناموفق حساب کاربری به دلیل موجود بودن ایمیل در پایگاه داده.',
+          success=False
+        )
         return redirect('accounts_dashboard')
       else:
         user.email = email.lower().strip()
@@ -145,7 +165,7 @@ class EditAccountView(View):
     log = Log.objects.create(
       account=request.user,
       action_type='UPDATE',
-      msg='کاربر تنظیمات حساب خود را بروز کرد.'
+      msg='تغییرات موفق در حساب کاربری.'
     )
     
     return redirect('accounts_dashboard')
@@ -172,6 +192,12 @@ class ChangePasswordView(View):
       
       return redirect('accounts_dashboard')
     else:
+      log = Log.objects.create(
+        account=request.user,
+        action_type='UPDATE',
+        success=False,
+        msg='تغییر نا موفق رمز عبور به دلیل عدم ورود رمز فعلی صحیح.'
+      )
       messages.error(request, 'رمز عبور فعلی اشتباه است.')
       return redirect('accounts_dashboard')
 
@@ -181,6 +207,12 @@ class DeleteAccountView(View):
     validation = request.POST.get('validation')
     if validation != f'{request.user.username}/{request.user.email}':
       messages.error(request, 'عبارت وارد شده نادرست است.')
+      log = Log.objects.create(
+        account=request.user,
+        action_type='DELETE',
+        success=False,
+        msg='حذف ناموفق حساب کاربری به علت عدم ورود صحیح عبارت داده شده.'
+      )
       return redirect('accounts_dashboard')
     else:
       samples = Sample.objects.filter(account=request.user)
@@ -192,6 +224,11 @@ class DeleteAccountView(View):
       user = User.objects.get(username=request.user.username)
       auth.logout(request)
       user.delete()
+      log = Log.objects.create(
+        account=request.user,
+        action_type='DELETE',
+        msg='حذف موفق حساب کاربری.'
+      )
       return redirect('index')
 
       
