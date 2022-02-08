@@ -3,6 +3,9 @@
 {% block content %}
 <h1>لاگ ها</h1>
 {% for log in logs %}
-{{ log }}
+{{ log.account }}
+{{ log.action_type }}
+{{ log.msg }}
+{{ log.created_at }}
 {% endfor %}
 {% endblock %}

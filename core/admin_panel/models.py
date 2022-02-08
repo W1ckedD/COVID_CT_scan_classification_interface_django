@@ -1,3 +1,4 @@
+from tkinter.tix import Tree
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -11,5 +12,7 @@ class Log(models.Model):
     ('UPDATE', 'update object in the db'),
     ('DELETE', 'delete object in the db'),
     ('PREDICT', 'use the COVID prediction api'),
-  ])
+  ]),
+  success = models.BooleanField(default=True),
+  failure_msg = models.CharField(max_length=150, blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)

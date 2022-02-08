@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages, auth
 from django.views import View
 from samples.models import Sample
+from admin_panel.models import Log
 from utils.decorators import (
   login_required,
   is_authenticated,
@@ -39,6 +40,14 @@ class LoginView(View):
       
       auth.login(request, user)
       messages.success(request, 'خوش آمدید.')
+
+      # Log
+      log = Log.objects.create(
+        account=request.user,
+        action_type='AUTH',
+        msg='کاربر با ایمیل به حساب کاربری خود وارد شد.'
+      )
+
       return redirect('accounts_dashboard')
       
     elif username:
@@ -48,6 +57,14 @@ class LoginView(View):
         return redirect('accounts_login')
       auth.login(request, user)
       messages.success(request, 'خوش آمدید.')
+      
+      # Log
+      log = Log.objects.create(
+        account=request.user,
+        action_type='AUTH',
+        msg='کاربر با نام کاربری به حساب کاربری خود وارد شد.'
+      )
+      
       return redirect('accounts_dashboard')
 
 
@@ -75,12 +92,26 @@ class RegisterView(View):
     auth.login(request, user)
     user.save()
     messages.success(request, 'حساب جدید با موفقیت ایجاد شد.')
+    
+    # Log
+    log = Log.objects.create(
+      account=user,
+      action_type='AUTH',
+      msg='کاربر حساب کاربری جدید ایجاد کرد.'
+    )
     return redirect('accounts_dashboard')
 
 class LogoutView(View):
   @login_required('accounts_login')
   def post(self, request, *args, **kwargs):
     auth.logout(request)
+
+    # Log
+    log = Log.objects.create(
+      account=request.user,
+      action_type='AUTH',
+      msg='کاربر از حساب کاربری خود خارج شد.'
+    )
     return redirect('accounts_login')
 
 
@@ -110,6 +141,13 @@ class EditAccountView(View):
 
     user.save()
     messages.success(request, 'تغییرات با موفقیت ثبت شد.')
+    # Log
+    log = Log.objects.create(
+      account=request.user,
+      action_type='UPDATE',
+      msg='کاربر تنظیمات حساب خود را بروز کرد.'
+    )
+    
     return redirect('accounts_dashboard')
 
 class ChangePasswordView(View):
@@ -124,6 +162,14 @@ class ChangePasswordView(View):
       user.save()
       auth.login(request, user)
       messages.success(request, 'رمز عبور با موفقیت تغغیر یافت.')
+      
+      # Log
+      log = Log.objects.create(
+        account=request.user,
+        action_type='UPDATE',
+        msg='تغییر موفق رمز عبور.'
+      )
+      
       return redirect('accounts_dashboard')
     else:
       messages.error(request, 'رمز عبور فعلی اشتباه است.')
