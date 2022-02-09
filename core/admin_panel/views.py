@@ -47,7 +47,7 @@ class LogView(View):
     end_date = request.GET.get('end_date')
 
     if log_username:
-      logs = logs.filter(account__username__icontains=log_username)
+      logs = logs.filter(Q(account__username__icontains=log_username) | Q(account_str__icontains=log_username))
     
     success_query = Q(success=True) if success else Q()
     failure_query = Q(success=False) if failure else Q()

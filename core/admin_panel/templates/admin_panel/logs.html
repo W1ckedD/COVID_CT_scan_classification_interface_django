@@ -92,8 +92,11 @@
     {% for log in logs %}
       <tr>
         <th scope="row">{{ forloop.counter }}</th>
+        {% if log.account %}
         <td>{{ log.account }}</td>
-        
+        {% else %}
+        <td style="color: var(--danger-color)">حذف شده: {{ log.account_str }}</td>
+        {% endif %}
         {% if log.action_type == 'AUTH' %}
         <td style="background-color: #ccc;">اهراز هویت</td>
         {% elif log.action_type == 'READ' %}
