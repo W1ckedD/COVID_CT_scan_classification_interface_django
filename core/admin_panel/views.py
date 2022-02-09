@@ -29,6 +29,13 @@ class AdminDashboardView(View):
   def get(self, request, *args, **kwargs):
     return render(request, 'admin_panel/dashboard.html', context={})
 
+class AdminManageUsersView(View):
+  @admin_required('admin_panel_login')
+  def get(self, request, *args, **kwargs):
+    users = User.objects.filter(is_staff=False)
+    return render(request, 'admin_panel/users.html', context={'users': users})
+
+
 class LogView(View):
   @admin_required('admin_panel_login')
   def get(self, request, *args, **kwargs):

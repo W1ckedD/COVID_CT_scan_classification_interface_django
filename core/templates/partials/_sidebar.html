@@ -1,19 +1,26 @@
 <nav class="sidebar" id="sidebar">
   {% if request.user.is_staff %}
   <ul class="sidebar-menu">
-    {% if 'dashboard' in request.path %}
+    {% if 'accounts/dashboard' in request.path %}
     <li class="menu-item active">
     {% else %}
     <li class="menu-item">
     {% endif %}
-      <a href="{% url 'accounts_dashboard' %}" class="menu-link">داشبورد</a>
+      <a href="{% url 'accounts_dashboard' %}" class="menu-link">داشبورد حساب</a>
     </li>
-    {% if 'my-samples' in request.path %}
+    {% if 'admin/dashboard' in request.path %}
     <li class="menu-item active">
     {% else %}
     <li class="menu-item">
     {% endif %}
-      <a href="{% url 'samples_my-samples' %}" class="menu-link">تصاویر من</a>
+      <a href="{% url 'admin_panel_dashboard' %}" class="menu-link">داشبورد ادمین</a>
+    </li>
+    {% if 'users' in request.path %}
+    <li class="menu-item active">
+    {% else %}
+    <li class="menu-item">
+    {% endif %}
+      <a href="{% url 'admin_panel_users' %}" class="menu-link">کاربران</a>
     </li>
     {% if 'logs' in request.path %}
     <li class="menu-item active">

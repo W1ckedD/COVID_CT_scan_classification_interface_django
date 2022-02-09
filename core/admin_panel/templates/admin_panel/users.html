@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}کاربران{% endblock %}
+{% block content %}
+{% if users|length == 0 %}
+<h1>کاربری یافت نشد.</h1>
+{% else %}
+<h1>کاربران</h1>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">نام کاربری</th>
+      <th scope="col">نام</th>
+      <th scope="col">نام خانوادگی</th>
+      <th scope="col">ایمیل</th>
+      <th scope="col">تاریخ عضویت</th>
+      <th scope="col">لاگ ها</th>
+      <th scope="col">انسداد</th>
+      <th scope="col">حذف</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for user in users %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ user.username }}</td>
+      <td>{{ user.first_name }}</td>
+      <td>{{ user.last_name }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.date_joined }}</td>
+      <td>
+        <form action="{% url 'admin_panel_logs' %}" method="get">
+          {% csrf_token %}
+          <input type="hidden" name="log_username" value="{{ user.username }}">
+          <button type="submit" class="btn" style="color: var(--bs-info);"><i class="fa fa-info"></i></button>
+        </form>
+      </td>
+      <td>
+        <form action="" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="user_id" value="{{ user.id }}">
+          <button type="submit" class="btn" style="color: var(--bs-warning);"><i class="fa fa-ban"></i></button>
+        </form>
+      </td>
+      <td>
+        <form action="" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="user_id" value="{{ user.id }}">
+          <button type="submit" class="btn" style="color: var(--danger-color);"><i class="fa fa-trash"></i></button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+{% endif %}
+{% endblock %}
