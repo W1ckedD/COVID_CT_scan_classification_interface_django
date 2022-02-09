@@ -30,6 +30,11 @@
       <span><i class="fa fa-search"></i></span>
     </button>
     {% endif %}
+    {% if 'logs' in request.path %}
+    <button id="btnLogSearch">
+      <span><i class="fa fa-search"></i></span>
+    </button>
+    {% endif %}
     {% if 'dashboard' in request.path %}
     <li class="nav-item active">{% else %}</li>
 

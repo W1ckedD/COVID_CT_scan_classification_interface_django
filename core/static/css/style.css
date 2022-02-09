@@ -137,7 +137,7 @@ html, body, h1, h2, h3, h4, h5, h6, p, input, textarea, button, a {
   margin-left: 1rem;
 }
 
-#search {
+#search, #logSearch {
   position: absolute;
   background-color: white;
   border-radius: 5px;
@@ -151,7 +151,7 @@ html, body, h1, h2, h3, h4, h5, h6, p, input, textarea, button, a {
   transform: translateY(-100vh);
 }
 
-#search.show {
+#search.show, #logSearch.show {
   transform: translateY(0);
 }
 
@@ -166,7 +166,7 @@ fieldset {
     margin: 0;
   }
 
-  #search {
+  #search, #logSearch {
     width: 100%;
   }
 }

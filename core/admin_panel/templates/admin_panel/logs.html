@@ -1,23 +1,110 @@
 {% extends 'base.html' %}
 {% block title %}لاگ ها{% endblock %}
 {% block content %}
+
+<div id="logSearch">
+  <h4>جستجوی پیشرفته</h4>
+  {% if 'users' in request.path %}
+  <form action="{% url 'admin_panel_logs' %}" method="get">
+  {% else %}
+  <form action="{%url 'admin_panel_logs' %}" method="get">
+  {% endif %}
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="form-group">
+          <label for="log_username">کاربر</label>
+          <input type="text" name="log_username" class="form-control" id="log_username">
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <fieldset name="success">
+          <legend for="success">موفقیت</legend>
+          <div class="checkbox-container">
+            <label for="success">موفق</label>
+            <input type="checkbox" name="success" id="success" />
+          </div>
+          <div class="checkbox-container">
+            <label for="failure">ناموفق</label>
+            <input type="checkbox" name="failure" id="failure" />
+          </div>
+        </fieldset>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <fieldset name="action_type">
+          <legend for="action_type">نوع عملیات</legend>
+          <div class="checkbox-container">
+            <label for="AUTH">AUTH</label>
+            <input type="checkbox" name="AUTH" id="AUTH" />
+          </div>
+          <div class="checkbox-container">
+            <label for="READ">READ</label>
+            <input type="checkbox" name="READ" id="READ" />
+          </div>
+          <div class="checkbox-container">
+            <label for="CREATE">CREATE</label>
+            <input type="checkbox" name="CREATE" id="CREATE" />
+          </div>
+          <div class="checkbox-container">
+            <label for="UPDATE">UPDATE</label>
+            <input type="checkbox" name="UPDATE" id="UPDATE" />
+          </div>
+          <div class="checkbox-container">
+            <label for="DELETE">DELETE</label>
+            <input type="checkbox" name="DELETE" id="DELETE" />
+          </div>
+          <div class="checkbox-container">
+            <label for="PREDICT">PREDICT</label>
+            <input type="checkbox" name="PREDICT" id="PREDICT" />
+          </div>
+        </fieldset>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="form-group">
+          <label for="start_date">تاریخ شروع</label>
+          <input type="date" name="start_date" class="form-control" id="log_start_date">
+        </div>
+        <div class="form-group">
+          <label for="end_date">تاریخ پایان</label>
+          <input type="date" name="end_date" class="form-control" id="log_end_date">
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">اعمال فیلتر</button>
+  </form>
+</div>
+
+
+
 <h1>لاگ ها</h1>
 <table class="table">
   <thead class="thead-dark">
     <tr>
       <th scope="col">#</th>
       <th scope="col">کاربر</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
+      <th scope="col">نوع عملیات</th>
+      <th scope="col">موفقیت</th>
+      <th scope="col">تاریخ</th>
+      <th scope="col">توضیحات</th>
     </tr>
   </thead>
   <tbody>
     {% for log in logs %}
+      {% if log.success %}
       <tr>
-        <th scope="row">1</th>
+      {% else %}
+      <tr style="background-color: var(--danger-color); color: white;">
+      {% endif %}
+        <th scope="row">{{ forloop.counter }}</th>
         <td>{{ log.account }}</td>
         <td>{{ log.action_type }}</td>
-        <td>{{ log.success }}</td>
+        {% if log.success %}
+        <td>موفق</td>
+        {% else %}
+        <td>ناموفق</td>
+        {% endif %}
+        <td>{{ log.created_at }}</td>
+        <td>{{ log.msg }}</td>
       </tr>
     {% endfor %}
   </tbody>

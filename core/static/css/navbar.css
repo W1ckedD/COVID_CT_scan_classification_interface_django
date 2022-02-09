@@ -69,7 +69,7 @@
   cursor: pointer;
 }
 
-#btnSearch {
+#btnSearch,#btnLogSearch {
   background-color: transparent;
   border: none;
   cursor: pointer;
