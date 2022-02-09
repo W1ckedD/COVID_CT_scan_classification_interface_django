@@ -90,18 +90,29 @@
   </thead>
   <tbody>
     {% for log in logs %}
-      {% if log.success %}
       <tr>
-      {% else %}
-      <tr style="background-color: var(--danger-color); color: white;">
-      {% endif %}
         <th scope="row">{{ forloop.counter }}</th>
         <td>{{ log.account }}</td>
-        <td>{{ log.action_type }}</td>
-        {% if log.success %}
-        <td>موفق</td>
+        
+        {% if log.action_type == 'AUTH' %}
+        <td style="background-color: #ccc;">اهراز هویت</td>
+        {% elif log.action_type == 'READ' %}
+        <td style="background-color: var(--bs-info);">خواندن</td>
+        {% elif log.action_type == 'CREATE' %}
+        <td style="background-color: var(--success-color); color: whtie;">ایجاد</td>
+        {% elif log.action_type == 'UPDATE' %}
+        <td style="background-color: var(--bs-warning);">بروزرسانی</td>
+        {% elif log.action_type == 'DELETE' %}
+        <td style="background-color: var(--danger-color); color: white;">حذف</td>
+        {% elif log.action_type == 'PREDICT' %}
+        <td style="background-color: rgb(177, 113, 158); color: white;">محاسبه احتمال</td>
         {% else %}
-        <td>ناموفق</td>
+        <td>{{ log.action_type }}</td>
+        {% endif %}
+        {% if log.success %}
+        <td >موفق</td>
+        {% else %}
+        <td style="background-color: var(--danger-color); color: white;">ناموفق</td>
         {% endif %}
         <td>{{ log.created_at }}</td>
         <td>{{ log.msg }}</td>
