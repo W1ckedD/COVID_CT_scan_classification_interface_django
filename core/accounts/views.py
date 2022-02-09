@@ -58,9 +58,12 @@ class LoginView(View):
       return redirect('accounts_dashboard')
       
     elif username:
-      user = auth.authenticate(username=username, password=password)
-      if user is None:
+      user = User.objects.filter(username=username)
+      if not user.exists():
         messages.error(request, 'نام کاربری / ایمیل یا رمز عبور اشتباه است.')
+        return redirect('accounts_login')
+      user = User.objects.get(username=username)
+      if not user.check_password(password):
         # Log
         log = Log.objects.create(
           account=request.user,
@@ -68,6 +71,7 @@ class LoginView(View):
           msg='ورود ناموفق به حساب کاربری به دلیل رمز عبور نادرست.',
           success=False,
         )
+        messages.error(request, 'نام کاربری / ایمیل یا رمز عبور اشتباه است.')
         return redirect('accounts_login')
       auth.login(request, user)
       messages.success(request, 'خوش آمدید.')
@@ -206,6 +210,7 @@ class DeleteAccountView(View):
   @login_required('accounts_login')
   def post(self, request, *args, **kwargs):
     validation = request.POST.get('validation')
+    password = request.POST.get('verify_password')
     if validation != f'{request.user.username}/{request.user.email}':
       messages.error(request, 'عبارت وارد شده نادرست است.')
       log = Log.objects.create(
@@ -213,6 +218,15 @@ class DeleteAccountView(View):
         action_type='DELETE',
         success=False,
         msg='حذف ناموفق حساب کاربری به علت عدم ورود صحیح عبارت داده شده.'
+      )
+      return redirect('accounts_dashboard')
+    elif not request.user.check_password(password):
+      messages.error(request, 'رمز عبور وارد شده نادرست است.')
+      log = Log.objects.create(
+        account=request.user,
+        action_type='DELETE',
+        success=False,
+        msg='حذف ناموفق حساب کاربری به علت عدم ورود رمز عبور صحیح.'
       )
       return redirect('accounts_dashboard')
     else:
@@ -223,13 +237,13 @@ class DeleteAccountView(View):
         fs.delete(IMG_DIR)
         sample.delete()
       user = User.objects.get(username=request.user.username)
-      auth.logout(request)
-      user.delete()
       log = Log.objects.create(
         account=request.user,
         action_type='DELETE',
         msg='حذف موفق حساب کاربری.'
       )
+      auth.logout(request)
+      user.delete()
       return redirect('index')
 
       

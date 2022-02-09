@@ -89,7 +89,7 @@
 
 <div class="row">
   <div class="col-lg-6 col-md-12 col-sm-12 order-3">
-    <form action="{% url 'accounts_delete-account' %}" method="post" class="form" id="form_delete_account">
+    <form autocomplete="off" action="{% url 'accounts_delete-account' %}" method="post" class="form" id="form_delete_account">
       {% csrf_token %}
       <h3 style="text-align: center;">حذف حساب کاربری</h3>
       <input type="hidden" id="validation_term" value="{{ request.user }}/{{ request.user.email }}">
@@ -98,7 +98,11 @@
           >عبارت "<strong> {{ request.user }}/{{ request.user.email }} </strong>
           " را وارد کنید.</label
         >
-        <input dir="ltr" type="text" name="validation" class="form-control" id="validation">
+        <input dir="ltr" type="text" name="validation" autocomplete="new-validation" class="form-control" id="validation">
+      </div>
+      <div class="form-group">
+        <label for="verify_password">رمز عبور</label>
+        <input dir="ltr" type="password" autocomplete="new-password" name="verify_password" class="form-control">
       </div>
       <button class="btn btn-danger btn-block" disabled id="btn_delete_account">حذف حساب کاربری</button>
     </form>
