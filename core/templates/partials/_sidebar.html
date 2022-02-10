@@ -29,13 +29,6 @@
     {% endif %}
       <a href="{% url 'admin_panel_logs' %}" class="menu-link">لاگ ها</a>
     </li>
-    {% if 'settings' in request.path %}
-    <li class="menu-item active">
-    {% else %}
-    <li class="menu-item">
-    {% endif %}
-      <a href="#" class="menu-link">تنظیمات</a>
-    </li>
   </ul>
   {% else %}
   <ul class="sidebar-menu">
@@ -59,13 +52,6 @@
     <li class="menu-item">
     {% endif %}
       <a href="{% url 'samples_add-sample' %}" class="menu-link">بارگذاری تصویر</a>
-    </li>
-    {% if 'settings' in request.path %}
-    <li class="menu-item active">
-    {% else %}
-    <li class="menu-item">
-    {% endif %}
-      <a href="#" class="menu-link">تنظیمات</a>
     </li>
   </ul>
   {% endif %}
