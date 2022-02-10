@@ -1,15 +1,17 @@
 from datetime import datetime, timedelta
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib import auth, messages
 from django.db.models import Q
 from .models import Log
 from utils.decorators import (
-  admin_required
+  admin_required,
+  is_authenticated
 )
 
 class AdminLoginView(View):
+  @is_authenticated
   def get(self, request, *args, **kwargs):
     return render(request, 'admin_panel/login.html', context={})
 
@@ -32,7 +34,7 @@ class AdminDashboardView(View):
 class AdminManageUsersView(View):
   @admin_required('admin_panel_login')
   def get(self, request, *args, **kwargs):
-    users = User.objects.filter(is_staff=False)
+    users = User.objects.filter(is_staff=False).order_by('username')
     return render(request, 'admin_panel/users.html', context={'users': users})
 
 
@@ -83,3 +85,32 @@ class LogView(View):
     logs = logs.order_by('-created_at')
 
     return render(request, 'admin_panel/logs.html', context={'logs': logs})
+
+class AdminBlockUserView(View):
+  @admin_required('admin_panel_login')
+  def post(self, request, *args, **kwargs):
+    user_id = request.POST.get('user_id')
+    user = get_object_or_404(User, id=user_id)
+    user.is_active = False
+    user.save()
+    messages.success(request, 'حساب کاربری مسدود شد.')
+    return redirect('admin_panel_users')
+
+class AdminUnBlockUserView(View):
+  @admin_required('admin_panel_login')
+  def post(self, request, *args, **kwargs):
+    user_id = request.POST.get('user_id')
+    user = get_object_or_404(User, id=user_id)
+    user.is_active = True
+    user.save()
+    messages.success(request, 'حساب کاربری باز شد.')
+    return redirect('admin_panel_users')
+
+class AdminDeleteUser(View):
+  @admin_required('admin_panel_login')
+  def post(self, request, *args, **kwargs):
+    user_id = request.POST.get('user_id')
+    user = get_object_or_404(User, id=user_id)
+    user.delete()
+    messages.success(request, 'حساب کاربری حذف شد.')
+    return redirect('admin_panel_users')

@@ -44,7 +44,9 @@ class LoginView(View):
         )
         messages.error(request, 'نام کاربری / ایمیل یا رمز عبور اشتباه است.')
         return redirect('accounts_login')
-      
+      if not user.is_active:
+        messages.error(request, 'این حساب کاربری مسدود شده است.')
+        return redirect('accounts_login')
       auth.login(request, user)
       messages.success(request, 'خوش آمدید.')
 
@@ -72,6 +74,9 @@ class LoginView(View):
           success=False,
         )
         messages.error(request, 'نام کاربری / ایمیل یا رمز عبور اشتباه است.')
+        return redirect('accounts_login')
+      if not user.is_active:
+        messages.error(request, 'این حساب کاربری مسدود شده است.')
         return redirect('accounts_login')
       auth.login(request, user)
       messages.success(request, 'خوش آمدید.')

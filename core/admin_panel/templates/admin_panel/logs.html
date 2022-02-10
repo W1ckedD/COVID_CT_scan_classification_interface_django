@@ -93,7 +93,9 @@
       <tr>
         <th scope="row">{{ forloop.counter }}</th>
         {% if log.account %}
-        <td>{{ log.account }}</td>
+        <td>
+          <a class="btn" style="color: #333;" href="{% url 'admin_panel_logs' %}?log_username={{ log.account.username | urlencode }}">{{ log.account }}</a>
+        </td>
         {% else %}
         <td style="color: var(--danger-color)">حذف شده: {{ log.account_str }}</td>
         {% endif %}

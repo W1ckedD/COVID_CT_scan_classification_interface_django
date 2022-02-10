@@ -37,14 +37,26 @@
         </form>
       </td>
       <td>
-        <form action="" method="post">
+        {% if user.is_active %}
+        <form action="{% url 'admin_panel_block-user' %}" method="post">
+        {% else %}
+        <form action="{% url 'admin_panel_unblock-user' %}" method="post">
+        {% endif %}
           {% csrf_token %}
           <input type="hidden" name="user_id" value="{{ user.id }}">
-          <button type="submit" class="btn" style="color: var(--bs-warning);"><i class="fa fa-ban"></i></button>
+          {% if user.is_active %}
+          <button type="submit" class="btn" style="color: var(--bs-warning);">
+            <i class="fa fa-ban"></i>
+          </button>
+          {% else %}
+          <button type="submit" class="btn" style="background-color: var(--bs-warning);">
+            <i class="fa fa-ban"></i>
+          </button>
+          {% endif %}
         </form>
       </td>
       <td>
-        <form action="" method="post">
+        <form action="{% url 'admin_panel_delete-user' %}" id="delete-form" method="post">
           {% csrf_token %}
           <input type="hidden" name="user_id" value="{{ user.id }}">
           <button type="submit" class="btn" style="color: var(--danger-color);"><i class="fa fa-trash"></i></button>
@@ -53,4 +65,14 @@
     </tr>
   {% endfor %}
 {% endif %}
+<script>
+  const deleteForm = document.querySelector('#delete-form');
+  deleteForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const deleteUser = confirm('آیا از تصمیم خود اطمینان دارید؟');
+    if (deleteUser) {
+      event.target.submit();
+    }
+  });
+</script>
 {% endblock %}
