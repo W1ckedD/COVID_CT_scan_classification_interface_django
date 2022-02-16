@@ -3,6 +3,7 @@
 {% block content %}
 
 <div id="logSearch">
+  <div id="logSearch-vue">
   <h4>جستجوی پیشرفته</h4>
   {% if 'users' in request.path %}
   <form action="{% url 'admin_panel_logs' %}" method="get">
@@ -14,7 +15,7 @@
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="form-group">
           <label for="log_username">کاربر</label>
-          <input type="text" name="log_username" class="form-control" id="log_username">
+          <input type="text" name="log_username" class="form-control" v-model="log_username">
         </div>
       </div>
       <div class="col-lg-3 col-md-4 col-sm-6">
@@ -22,11 +23,11 @@
           <legend for="success">موفقیت</legend>
           <div class="checkbox-container">
             <label for="success">موفق</label>
-            <input type="checkbox" name="success" id="success" />
+            <input type="checkbox" name="success" v-model="success" />
           </div>
           <div class="checkbox-container">
             <label for="failure">ناموفق</label>
-            <input type="checkbox" name="failure" id="failure" />
+            <input type="checkbox" name="failure" v-model="failure" />
           </div>
         </fieldset>
       </div>
@@ -35,43 +36,44 @@
           <legend for="action_type">نوع عملیات</legend>
           <div class="checkbox-container">
             <label for="AUTH">AUTH</label>
-            <input type="checkbox" name="AUTH" id="AUTH" />
+            <input type="checkbox" name="AUTH" v-model="AUTH" />
           </div>
           <div class="checkbox-container">
             <label for="READ">READ</label>
-            <input type="checkbox" name="READ" id="READ" />
+            <input type="checkbox" name="READ" v-model="READ" />
           </div>
           <div class="checkbox-container">
             <label for="CREATE">CREATE</label>
-            <input type="checkbox" name="CREATE" id="CREATE" />
+            <input type="checkbox" name="CREATE" v-model="CREATE" />
           </div>
           <div class="checkbox-container">
             <label for="UPDATE">UPDATE</label>
-            <input type="checkbox" name="UPDATE" id="UPDATE" />
+            <input type="checkbox" name="UPDATE" v-model="UPDATE" />
           </div>
           <div class="checkbox-container">
             <label for="DELETE">DELETE</label>
-            <input type="checkbox" name="DELETE" id="DELETE" />
+            <input type="checkbox" name="DELETE" v-model="DELETE" />
           </div>
           <div class="checkbox-container">
             <label for="PREDICT">PREDICT</label>
-            <input type="checkbox" name="PREDICT" id="PREDICT" />
+            <input type="checkbox" name="PREDICT" v-model="PREDICT" />
           </div>
         </fieldset>
       </div>
       <div class="col-lg-2 col-md-4 col-sm-6">
         <div class="form-group">
           <label for="start_date">تاریخ شروع</label>
-          <input type="date" name="start_date" class="form-control" id="log_start_date">
+          <input type="date" name="start_date" class="form-control" v-model="log_start_date">
         </div>
         <div class="form-group">
           <label for="end_date">تاریخ پایان</label>
-          <input type="date" name="end_date" class="form-control" id="log_end_date">
+          <input type="date" name="end_date" class="form-control" v-model="log_end_date">
         </div>
       </div>
     </div>
     <button type="submit" class="btn btn-primary">اعمال فیلتر</button>
   </form>
+</div>
 </div>
 
 

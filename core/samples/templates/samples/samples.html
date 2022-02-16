@@ -3,6 +3,7 @@
 
 
 <div id="search">
+  <div id="search-vue">
   <h4>جستجوی پیشرفته</h4>
   {% if 'my-samples' in request.path %}
   <form action="{% url 'samples_my-samples' %}" method="get">
@@ -14,19 +15,19 @@
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="form-group">
           <label for="name">نام نمونه</label>
-          <input type="text" name="name" class="form-control" id="name">
+          <input type="text" name="name" class="form-control" v-model="name">
         </div>
       </div>
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="form-group">
           <label for="username">نام کاربری کاربر مالک</label>
-          <input type="text" name="username" class="form-control" id="username">
+          <input type="text" name="username" class="form-control" v-model="username">
         </div>
       </div>
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="form-group">
           <label for="owner_name">نام کاربر مالک</label>
-          <input type="text" name="owner_name" class="form-control" id="owner_name">
+          <input type="text" name="owner_name" class="form-control" v-model="owner_name">
         </div>
       </div>
       <div class="col-lg-3 col-md-4 col-sm-6">
@@ -34,21 +35,22 @@
           <legend for="result">نتیجه</legend>
           <div class="checkbox-container">
             <label for="pos">کوید مثبت</label>
-            <input type="checkbox" name="pos" id="pos" />
+            <input type="checkbox" name="pos" v-model="pos" />
           </div>
           <div class="checkbox-container">
             <label for="neg">کوید منفی</label>
-            <input type="checkbox" name="neg" id="neg" />
+            <input type="checkbox" name="neg" v-model="neg" />
           </div>
           <div class="checkbox-container">
             <label for="tbd">نا مشخص</label>
-            <input type="checkbox" name="tbd" id="tbd" />
+            <input type="checkbox" name="tbd" v-model="tbd" />
           </div>
         </fieldset>
       </div>
     </div>
     <button type="submit" class="btn btn-primary">اعمال فیلتر</button>
   </form>
+  </div>
 </div>
 
 {% if samples|length == 0 %}

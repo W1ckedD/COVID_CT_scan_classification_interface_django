@@ -6,14 +6,7 @@
     {% else %}
     <li class="menu-item">
     {% endif %}
-      <a href="{% url 'accounts_dashboard' %}" class="menu-link">داشبورد حساب</a>
-    </li>
-    {% if 'admin/dashboard' in request.path %}
-    <li class="menu-item active">
-    {% else %}
-    <li class="menu-item">
-    {% endif %}
-      <a href="{% url 'admin_panel_dashboard' %}" class="menu-link">داشبورد ادمین</a>
+      <a href="{% url 'accounts_dashboard' %}" class="menu-link">داشبورد</a>
     </li>
     {% if 'users' in request.path %}
     <li class="menu-item active">
